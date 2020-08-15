@@ -2,3 +2,4 @@ https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-phpmy
 https://www.isicca.com/fr/lets-encrypt-guide-ultime/
 https://www.isicca.com/fr/certificat-ssl-tls-guide-debutant/
 https://www.nginx.com/resources/wiki/start/topics/examples/full/
+https://askubuntu.com/questions/1184416/problem-installing-phpmyadmin-on-ubuntu-19-10-eoan-ermine
