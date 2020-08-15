@@ -25,7 +25,7 @@ RUN		mkdir /etc/ssl && \
 		openssl x509 -req -in /etc/ssl/certifssl.csr -signkey /etc/ssl/certifssl.key -out /etc/ssl/certifssl.crt -days 999
 
 # Wordpress
-		curl https://wordpress.org/latest.tar.gz -o /var/www/localhost/wp.tar.gz
+RUN		curl https://wordpress.org/latest.tar.gz -o /var/www/localhost/wp.tar.gz
 		tar xzf /var/www/localhost/wp.tar.gz && \
 		mv wordpress /var/www/localhost/wordpress && \
 		rm -f /var/www/localhost/wp.tar.gz && \
