@@ -8,9 +8,9 @@ server {
         server_name localhost www.localhost www.localhost.com;
         listen  [::]:443 ssl;
 
-        ssl_protocols TLSv1.2;
-        ssl_certificate /etc/letsencrypt/live/www.localhost.com/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/www.localhost.com/privkey.pem;
+        ssl     on;
+	ssl_certificate         /ssl/localhost.cert;
+	ssl_certificate_key     /ssl/localhost.key;
 
         root    /var/www/localhost/wordpress;
         index   index.html;
