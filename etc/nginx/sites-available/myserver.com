@@ -12,8 +12,8 @@ server {
         ssl_certificate /etc/letsencrypt/live/www.localhost.com/fullchain.pem;
         ssl_certificate_key /etc/letsencrypt/live/www.localhost.com/privkey.pem;
 
-        root /var/www/html;
-        index index.php index.html index.htm;
+        root    /var/www/localhost/wordpress;
+        index   index.html;
 
         location / {
                 autoindex on;
@@ -23,14 +23,5 @@ server {
         location /thisisnothere {
                 auth_basic "Admin Login";
                 auth_basic_user_file /etc/nginx/pma_pass;
-        }
-
-        location ~ \.php$ {
-                include snippets/fastcgi-php.conf;
-                fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
-        }
-
-        location ~ /\.ht {
-                deny all;
         }
 }
