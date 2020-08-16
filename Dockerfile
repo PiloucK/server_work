@@ -6,6 +6,8 @@ RUN     apt-get update && \
 			default-mysql-server \
 			nginx \
 			openssl \
+			php-cli \
+			php-fpm \
 			php-mysql \
 			wget
 
@@ -13,8 +15,7 @@ COPY	srcs/wordpress.sql .
 COPY	srcs/start.sh .
 
 # Nginx config
-RUN		mkdir /var/www/localhost && \
-		rm -rf /etc/nginx/sites-enabled/* && \
+RUN		rm -rf /etc/nginx/sites-enabled/* && \
 		ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled && \
 		rm -rf /usr/share/nginx/www
 COPY	srcs/myserver.com /etc/nginx/sites-available/localhost
@@ -24,29 +25,34 @@ COPY	srcs/myserver.com /etc/nginx/sites-available/localhost
 # 		/opt/letsencrypt/letsencrypt-auto certonly --rsa-key-size 4096 --standalone -d www.isicca.com
 
 # SSL certificate generation
-RUN		mkdir -p /etc/ssl && \
-		openssl genrsa -out /etc/ssl/localhost.key 2048 && \
-		openssl req -new -x509 -key /etc/ssl/localhost.key -out /etc/ssl/localhost.cert \
+RUN		mkdir -p /ssl && \
+		openssl genrsa -out /ssl/localhost.key 2048 && \
+		openssl req -new -x509 -key /ssl/localhost.key -out /ssl/localhost.cert \
 			-days 3650 -subj /CN=www.localhost
 
 # Wordpress download
-RUN		wget -O /var/www/localhost/wp.tar.gz https://wordpress.org/latest.tar.gz && \
-		tar xzf /var/www/localhost/wp.tar.gz && \
-		mv wordpress /var/www/localhost/wordpress && \
-		rm -f /var/www/localhost/wp.tar.gz
-COPY	srcs/wp-config.php /var/www/localhost/wordpress
+RUN		wget -O /var/www/html/wp.tar.gz https://wordpress.org/latest.tar.gz && \
+		tar xzf /var/www/html/wp.tar.gz && \
+		mv wordpress /var/www/html/wordpress && \
+		rm -f /var/www/html/wp.tar.gz
+COPY	srcs/wp-config.php /var/www/html/wordpress
+
+# RUN		wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+# 		chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp
 
 # Downloat and set 'safe' phpmyadmin (no root access and randomly named path)
-RUN		mkdir /var/www/localhost/pma && \
-		mkdir /var/www/localhost/tmp && \
-		wget -O /var/www/localhost/pma/nothing.tar.gz https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-english.tar.gz && \
-		tar xzf /var/www/localhost/pma/nothing.tar.gz --directory /var/www/localhost/tmp && \
-		mv /var/www/localhost/tmp/* /var/www/html/thisisnothere && \
-		rm -rf /var/www/localhost/pma
+RUN		mkdir /var/www/html/pma && \
+		mkdir /var/www/html/tmp && \
+		wget -O /var/www/html/pma/nothing.tar.gz https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-english.tar.gz && \
+		tar xzf /var/www/html/pma/nothing.tar.gz --directory /var/www/html/tmp && \
+		mv /var/www/html/tmp/* /var/www/html/thisisnothere && \
+		rm -rf /var/www/html/pma
 COPY	srcs/pma_pass etc/nginx/pma_pass
 
 RUN		service mysql start && \
 		cat wordpress.sql | mysql -u root && \
 		rm wordpress.sql
+
+EXPOSE	80 443
 
 CMD		bash start.sh
