@@ -1,19 +1,22 @@
 server {
+        listen  80;
         listen  [::]:80 default_server;
 
+        server_name --;
         return 301 https://$host$request_uri;
 }
 
 server {
         server_name localhost www.localhost www.localhost.com;
+        listen  443 ssl;
         listen  [::]:443 ssl;
 
         access_log /var/log/nginx/website/access.log;
         error_log /var/log/nginx/website/error.log warn;
 
         ssl     on;
-	ssl_certificate         /ssl/localhost.cert;
-	ssl_certificate_key     /ssl/localhost.key;
+	ssl_certificate         /etc/ssl/localhost.cert;
+	ssl_certificate_key     /etc/ssl/localhost.key;
 
         root    /var/www/localhost;
         index   index.php;
