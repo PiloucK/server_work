@@ -47,10 +47,11 @@ COPY	srcs/wp-config.php /var/www/localhost/wordpress
 RUN		mkdir /var/www/localhost/pma && \
 		wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-english.tar.gz && \
 		tar xzf phpMyAdmin-latest-english.tar.gz --directory /var/www/localhost/pma && \
-		mv /var/www/localhost/pma/* /var/www/localhost/thisisnothere && \
+			mv /var/www/localhost/pma/* /var/www/localhost/thisisnothere && \
 		rm -rf /var/www/localhost/pma
-COPY	srcs/pma_pass etc/nginx/pma_pass
+COPY	srcs/pma_secure.php /etc/phpmyadmin/conf.d
 COPY	srcs/config.inc.php /var/www/localhost/thisisnothere
+
 
 RUN		service mysql start && \
 		cat wordpress.sql | mysql -u root && \
