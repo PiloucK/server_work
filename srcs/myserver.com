@@ -1,23 +1,25 @@
 server {
-        listen                  [::]:80 default_server;
+        listen                  80 default_server;
+        listen                  [::]:80 ipv6only=on default_server;
 
         server_name             _;
         return                  301 https://$host$request_uri;
 }
 
 server {
-        server_name             localhost www.localhost;
-        listen                  [::]:443 ssl;
+        listen                  443 ssl;
+        listen                  [::]:443 ipv6only=on ssl;
 
         ssl                     on;
-	ssl_certificate         /ssl/localhost.cert;
-	ssl_certificate_key     /ssl/localhost.key;
+	ssl_certificate		/ssl/localhost.cert;
+	ssl_certificate_key	/ssl/localhost.key;
 
-        root                    /var/www/localhost/wordpress;
+        server_name             localhost www.localhost;
+        root                    /var/www/localhost;
         index                   index.php;
 
         location / {
-                autoindex       on
+                autoindex       on;
         	try_files       $uri $uri/ =404;
 	}
 

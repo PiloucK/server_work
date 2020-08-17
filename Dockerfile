@@ -6,19 +6,21 @@ RUN     apt-get update && \
 			default-mysql-server \
 			nginx \
 			openssl \
+			php \
 			php-cli \
 			php-fpm \
 			php-mysql \
+			php-mbstring php-zip php-gd \
 			wget
 
 COPY	srcs/wordpress.sql .
 COPY	srcs/start.sh .
 
 # Nginx config
-RUN		rm -rf /etc/nginx/sites-enabled/* && \
-		ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled && \
-		rm -rf /usr/share/nginx/www
 COPY	srcs/myserver.com /etc/nginx/sites-available/localhost
+RUN		rm -rf /etc/nginx/sites-enabled/* && \
+		rm -rf /usr/share/nginx/www && \
+		ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled
 
 # Using let's encrypt for tls protocol but doubts on subject limits so ssl set up (add git to apt-get install to use tls)
 # RUN		git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt --depth=1 && \
@@ -31,23 +33,24 @@ RUN		mkdir -p /ssl && \
 			-days 3650 -subj /CN=www.localhost
 
 # Wordpress download
-RUN		wget -O /var/www/html/wp.tar.gz https://wordpress.org/latest.tar.gz && \
-		tar xzf /var/www/html/wp.tar.gz && \
-		mv wordpress /var/www/html/wordpress && \
-		rm -f /var/www/html/wp.tar.gz
-COPY	srcs/wp-config.php /var/www/html/wordpress
+RUN		mkdir -p /var/www/localhost && \
+		wget -O /var/www/localhost/wp.tar.gz https://wordpress.org/latest.tar.gz && \
+		tar xzf /var/www/localhost/wp.tar.gz && \
+		mv wordpress /var/www/localhost/wordpress && \
+		rm -f /var/www/localhost/wp.tar.gz
+COPY	srcs/wp-config.php /var/www/localhost/wordpress
 
 # RUN		wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
 # 		chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp
 
 # Downloat and set 'safe' phpmyadmin (no root access and randomly named path)
-RUN		mkdir /var/www/html/pma && \
-		mkdir /var/www/html/tmp && \
-		wget -O /var/www/html/pma/nothing.tar.gz https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-english.tar.gz && \
-		tar xzf /var/www/html/pma/nothing.tar.gz --directory /var/www/html/tmp && \
-		mv /var/www/html/tmp/* /var/www/html/thisisnothere && \
-		rm -rf /var/www/html/pma
+RUN		mkdir /var/www/localhost/pma && \
+		wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-english.tar.gz && \
+		tar xzf phpMyAdmin-latest-english.tar.gz --directory /var/www/localhost/pma && \
+		mv /var/www/localhost/pma/* /var/www/localhost/thisisnothere && \
+		rm -rf /var/www/localhost/pma
 COPY	srcs/pma_pass etc/nginx/pma_pass
+COPY	srcs/config.inc.php /var/www/localhost/thisisnothere
 
 RUN		service mysql start && \
 		cat wordpress.sql | mysql -u root && \
