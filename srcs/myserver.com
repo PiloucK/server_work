@@ -1,27 +1,25 @@
 server {
-        listen                  80 default_server;
-        listen                  [::]:80 ipv6only=on default_server;
+        listen                  [::]:80 default_server;
 
-        server_name             _;
+        server_name             --;
         return                  301 https://$host$request_uri;
 }
 
 server {
-        listen                  443 ssl;
-        listen                  [::]:443 ipv6only=on ssl;
+        listen                  [::]:443 ssl;
 
-        ssl                     on;
-	ssl_certificate		/ssl/localhost.cert;
-	ssl_certificate_key	/ssl/localhost.key;
+        ssl_certificate		    localhost.cert;
+        ssl_certificate_key	    localhost.key;
 
-        server_name             localhost www.localhost;
-        root                    /var/www/localhost;
-        index                   index.php;
+        root                    /var/www/html;
+        index                   index.php index index.html index.htm accueil.html;
+
+        server_name             --;
 
         location / {
-                autoindex       on;
+            autoindex       on;
         	try_files       $uri $uri/ =404;
-	}
+	    }
 
         location ~* wp-config.php {
                 deny all;
@@ -34,6 +32,6 @@ server {
 
         location ~ \.php$ {
 	        include snippets/fastcgi-php.conf;
-	        fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+	        fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
 	}
 }
