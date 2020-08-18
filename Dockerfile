@@ -7,7 +7,7 @@ RUN     apt-get update \
 			nginx \
 			openssl \
 			php \
-			php-cli php-fpm php-gd php-mbstring php-mysql php-zip \
+			php-cli php-curl php-fpm php-gd php-intl php-mysql \
 			wget
 
 # COPY	srcs/wordpress.sql .
@@ -46,6 +46,7 @@ RUN		mkdir /var/www/html/pma \
 		&& tar xzf phpMyAdmin-latest-english.tar.gz --directory /var/www/html/pma \
 		&& mv /var/www/html/pma/* /var/www/html/thisisnothere \
 		&& rm -rf /var/www/html/pma
+COPY	srcs/pma_pass /etc/nginx/pma_pass
 # COPY	srcs/pma_secure.php /etc/phpmyadmin/conf.d
 # COPY	srcs/config.inc.php /var/www/html/thisisnothere
 
