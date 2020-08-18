@@ -14,9 +14,9 @@ RUN     apt-get update \
 # COPY	srcs/start.sh .
 
 # Nginx config
-COPY	srcs/myserver.com /etc/nginx/sites-available
-RUN		rm -rf /etc/nginx/sites-enabled/* /usr/share/nginx/www /var/www/html/index.nginx-debian.html \
-		&& ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled
+COPY	srcs/myserv.conf /etc/nginx/sites-enabled
+RUN		rm -rf /etc/nginx/sites-enabled/default /var/www/html/index.nginx-debian.html
+		# && ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled
 
 COPY    srcs/accueil.html /var/www/html
 
@@ -27,8 +27,9 @@ RUN     service mysql start ; \
 		mysql -u root -e "FLUSH PRIVILEGES";
 
 # SSL certificate generation
-RUN	    openssl genrsa -out localhost.key 2048 \
-		&& openssl req -new -x509 -key localhost.key -out localhost.cert \
+RUN	    mkdir -p /ssl \
+		&& openssl genrsa -out /ssl/localhost.key 2048 \
+		&& openssl req -new -x509 -key /ssl/localhost.key -out /ssl/localhost.cert \
 			-days 3650 -subj /CN=www.localhost
 
 # Wordpress download
@@ -52,7 +53,7 @@ RUN		mkdir /var/www/html/pma \
 # 		&& cat wordpress.sql | mysql -u root \
 # 		&& rm wordpress.sql
 
-CMD		service mysql restart \
-        && service php7.3-fpm start \
-        && service nginx start \
-        && sleep infinity
+CMD		service mysql restart ; \
+        service php7.3-fpm start ; \
+        service nginx start ; \
+        sleep infinity
