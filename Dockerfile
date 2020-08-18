@@ -49,7 +49,7 @@ RUN		mkdir /var/www/localhost/pma && \
 		tar xzf phpMyAdmin-latest-english.tar.gz --directory /var/www/localhost/pma && \
 			mv /var/www/localhost/pma/* /var/www/localhost/thisisnothere && \
 		rm -rf /var/www/localhost/pma
-COPY	srcs/pma_secure.php /etc/phpmyadmin/conf.d
+# COPY	srcs/pma_secure.php /etc/phpmyadmin/conf.d
 COPY	srcs/config.inc.php /var/www/localhost/thisisnothere
 
 
