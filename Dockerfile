@@ -4,19 +4,16 @@ RUN     apt-get update \
 		&& apt-get upgrade -y \
 		&& apt-get install -y \
 			default-mysql-server \
+			htop \
 			nginx \
 			openssl \
 			php \
-			php-cli php-curl php-fpm php-gd php-intl php-mysql \
+			php-cli php-curl php-fpm php-gd php-intl php-mbstring php-mysql \	
 			wget
-
-# COPY	srcs/wordpress.sql .
-# COPY	srcs/start.sh .
 
 # Nginx config
 COPY	srcs/myserv.conf /etc/nginx/sites-enabled
 RUN		rm -rf /etc/nginx/sites-enabled/default /var/www/html/index.nginx-debian.html
-		# && ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled
 
 COPY    srcs/accueil.html /var/www/html
 
@@ -27,10 +24,9 @@ RUN     service mysql start ; \
 		mysql -u root -e "FLUSH PRIVILEGES";
 
 # SSL certificate generation
-RUN	    mkdir -p /ssl \
-		&& openssl genrsa -out /ssl/localhost.key 2048 \
-		&& openssl req -new -x509 -key /ssl/localhost.key -out /ssl/localhost.cert \
-			-days 3650 -subj /CN=www.localhost
+RUN openssl req -new -newkey rsa:2048 -nodes -x509 -subj '/C=FR/ST=IDF/L=PARIS/O=YourOrg/CN=www.yourorg.com' -days 3650 -keyout example.key -out example.crt \
+	&& mv example.crt /etc/ \
+	&& mv example.key /etc/
 
 # Wordpress download
 RUN		wget -O /var/www/html/wp.tar.gz https://wordpress.org/latest.tar.gz \
@@ -47,12 +43,6 @@ RUN		mkdir /var/www/html/pma \
 		&& mv /var/www/html/pma/* /var/www/html/thisisnothere \
 		&& rm -rf /var/www/html/pma
 COPY	srcs/pma_pass /etc/nginx/pma_pass
-# COPY	srcs/pma_secure.php /etc/phpmyadmin/conf.d
-# COPY	srcs/config.inc.php /var/www/html/thisisnothere
-
-# RUN		service mysql start \
-# 		&& cat wordpress.sql | mysql -u root \
-# 		&& rm wordpress.sql
 
 CMD		service mysql restart ; \
         service php7.3-fpm start ; \

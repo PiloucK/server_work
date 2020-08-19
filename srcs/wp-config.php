@@ -13,7 +13,7 @@
  * * Database table prefix
  * * ABSPATH
  *
- * @link https://codex.wordpress.org/Editing_wp-config.php
+ * @link https://wordpress.org/support/article/editing-wp-config-php/
  *
  * @package WordPress
  */
@@ -46,14 +46,14 @@ define( 'DB_COLLATE', '' );
  *
  * @since 2.6.0
  */
-define('AUTH_KEY',         'kX;jEIv-SNkQ4MJ?Z({v^$j>e$/}eFzOg_&/7@3|Om~!+|M&=>i#Q4m1I6x|>2 ~');
-define('SECURE_AUTH_KEY',  'T9:Eu yY--Yl.mc.QT#z@~U4!0 ,-YN+D_HVBh6#uJRQ)C.Ey084QwfUqshA:c-t');
-define('LOGGED_IN_KEY',    '.+JGLQ -!j!ke5/C9TT+-*ihQ+$!+WGT7251z=T-3wFpq*IzWg2.<}Vca#+R~?kt');
-define('NONCE_KEY',        'd%=boJQ&/zY(`Qz3Fj Z?+[gD-LO(0Sx,#N=4O/UZm#o{NC)tGx1-+%vav^p?;_A');
-define('AUTH_SALT',        '|80kLa{8vltX&:X-l!D #^AC;43Dh>WOx)52fs.x[$Ti:y@#?D@SOAS+ef6N_!rX');
-define('SECURE_AUTH_SALT', 'ollRy`ULZBbG*UBgo8xa>d?IYw@DF/CY!McvJ1?r;&eq}`~+Y|3E+n/c3z%EzZcj');
-define('LOGGED_IN_SALT',   'T(:UX?_#rUbeME=+&MSIKD%qtu6BOrl+.o,@NrV6sBT# m9oyG&?8S3L|++~ld}|');
-define('NONCE_SALT',       'Ial?`J4vVNe*E$|?_q1=Y>k!fA8LEY{&vXo]U5?pFdi}tT{}Pc_0(LNr]S~Z(+!2');
+define('AUTH_KEY',         '0=PP?G%HrAc0yD<w;ZmcI{.?c>W-6,jzk6SPt|T-x^,a7#EC; /S48%oNrOn/2XV');
+define('SECURE_AUTH_KEY',  'ET`AZ_.fnX[^O^dy1*4Y#NDr9#|^5?8YyYT?4(cWU1ld%-#x=Gi*Xdu2WU@KZmr&');
+define('LOGGED_IN_KEY',    '+=*V?EI1m<480bjU]%!KCswM@qLF2^PF|6Vd:1xV|3|ymf8EED_^VE4y$^u(K21[');
+define('NONCE_KEY',        'x,|#9L]haCtlY zUQv-K .$no+5fBKon_}rRNFYb-.n]6jQL/nqc%HSV=Ukx,Sx&');
+define('AUTH_SALT',        'i?C`h28Sx5^Dvij!B<V6@|gc)b~vLOE>)8qL)+c5M~|1)=3k/Ur${n&LY]=s>EAM');
+define('SECURE_AUTH_SALT', 'K/L vf+?-U<x&DJIe2MNQ-9k67]#y+_m!@}_=akOl|cbvMYs[Vy+d|Khz5,k4/.$');
+define('LOGGED_IN_SALT',   '46hv]iK#*^uGW83#3.{#,$0u+?ZD1hJ;!GCCcRvKa(HUf}H&{0/`^>)mcPcjFnYe');
+define('NONCE_SALT',       't^>gBd+J}ZH:i0;T-7UF`XbX+1)$H$;Px?r9Q$RPjJ>j3 ]yCDWk}6AsUtSy.&&L');
 
 /**#@-*/
 
@@ -73,9 +73,9 @@ $table_prefix = 'wp_';
  * in their development environments.
  *
  * For information on other constants that can be used for debugging,
- * visit the Codex.
+ * visit the documentation.
  *
- * @link https://codex.wordpress.org/Debugging_in_WordPress
+ * @link https://wordpress.org/support/article/debugging-in-wordpress/
  */
 define( 'WP_DEBUG', false );
 
@@ -83,8 +83,8 @@ define( 'WP_DEBUG', false );
 
 /** Absolute path to the WordPress directory. */
 if ( ! defined( 'ABSPATH' ) ) {
-	define( 'ABSPATH', dirname( __FILE__ ) . '/' );
+	define( 'ABSPATH', __DIR__ . '/' );
 }
 
 /** Sets up WordPress vars and included files. */
-require_once( ABSPATH . 'wp-settings.php' );
+require_once ABSPATH . 'wp-settings.php';
