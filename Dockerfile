@@ -1,4 +1,4 @@
-FROM	debian:buster
+FROM	debian:buster-slim
 
 RUN     apt-get update \
 		&& apt-get upgrade -y \
@@ -12,10 +12,11 @@ RUN     apt-get update \
 			wget
 
 # Nginx config
-COPY	srcs/myserv.conf /etc/nginx/sites-enabled
-RUN		rm -rf /etc/nginx/sites-enabled/default /var/www/html/index.nginx-debian.html
-
-COPY    srcs/accueil.html /var/www/html
+COPY	srcs/myserv_index_on.conf .
+COPY	srcs/myserv_index_off.conf .
+COPY	srcs/switch_index.sh .
+RUN		cp myserv_index_on.conf /etc/nginx/sites-enabled/myserv.conf \
+		&& rm -rf /etc/nginx/sites-enabled/default
 
 RUN     service mysql start ; \
 		mysql -u root -e "CREATE DATABASE "wordpress" ;" ; \ 
@@ -47,4 +48,4 @@ COPY	srcs/pma_pass /etc/nginx/pma_pass
 CMD		service mysql restart ; \
         service php7.3-fpm start ; \
         service nginx start ; \
-        sleep infinity
+		sleep infinity
